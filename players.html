@@ -74,79 +74,64 @@ Loading players...
 </div>
 
 <script>
+```javascript
+const csvUrl =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=816094404&single=true&output=csv";
 
-try {
+async function loadPlayers(){
 
-    const response = await fetch(csvUrl);
+    try {
 
-    console.log("Response:", response);
+        const response = await fetch(csvUrl);
+        const text = await response.text();
 
-    const text = await response.text();
+        const rows = text.trim().split("\n").slice(1);
 
-    console.log(text);
+        const container =
+        document.getElementById("players");
 
-    const rows = text.trim().split("\n").slice(1);
+        container.innerHTML = "";
 
-    const container =
-    document.getElementById("players");
+        rows.forEach(row=>{
 
-    container.innerHTML = "";
+            const cols = row.split(",");
 
-    rows.forEach(row=>{
+            const name = cols[0];
+            const rank = cols[1];
+            const points = cols[2];
+            const exact = cols[3];
+            const winners = cols[4];
+            const winnerPick = cols[5];
 
-        const cols = row.split(",");
+            container.innerHTML += `
+            <div class="player-card">
+                <div class="player-name">${name}</div>
 
-        container.innerHTML += `
-        <div class="player-card">
-            <div class="player-name">${cols[0]}</div>
-        </div>
-        `;
-    });
-
-}
-catch(error){
-
-    console.error(error);
-
-    document.getElementById("players").innerHTML =
-    "<h2>Failed to load player data</h2>";
-}
-
-return;
-
-    const container =
-    document.getElementById("players");
-
-    container.innerHTML = "";
-
-    rows.forEach(row=>{
-
-        const cols = row.split(",");
-
-        const name = cols[0];
-        const rank = cols[1];
-        const points = cols[2];
-        const exact = cols[3];
-        const winners = cols[4];
-        const winnerPick = cols[5];
-
-        container.innerHTML += `
-        <div class="player-card">
-            <div class="player-name">${name}</div>
-
-            <div class="stats">
-                <div class="stat">🏆 Rank: ${rank}</div>
-                <div class="stat">💯 Points: ${points}</div>
-                <div class="stat">🎯 Exact Scores: ${exact}</div>
-                <div class="stat">✅ Correct Winners: ${winners}</div>
-                <div class="stat">🌍 Winner Pick: ${winnerPick}</div>
+                <div class="stats">
+                    <div class="stat">🏆 Rank: ${rank}</div>
+                    <div class="stat">💯 Points: ${points}</div>
+                    <div class="stat">🎯 Exact Scores: ${exact}</div>
+                    <div class="stat">✅ Correct Winners: ${winners}</div>
+                    <div class="stat">🌍 Winner Pick: ${winnerPick}</div>
+                </div>
             </div>
-        </div>
-        `;
-    });
+            `;
+        });
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        document.getElementById("players").innerHTML =
+        "<h2>Failed to load player data</h2>";
+    }
 }
 
 loadPlayers();
+```
+
+
 
 </script>
 
