@@ -3,56 +3,75 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>World Cup Pool 2026</title>
+<title>FIFA World Cup 2026 Pool</title>
 
 <style>
 body{
-  margin:0;
-  background:#041E42;
-  color:white;
-  font-family:Arial,sans-serif;
+    margin:0;
+    background:#041E42;
+    color:white;
+    font-family:Arial, sans-serif;
 }
 
 header{
-  background:#03152d;
-  padding:20px;
-  text-align:center;
+    text-align:center;
+    padding:30px;
+    background:#03152d;
 }
 
 h1{
-  color:#FFD700;
+    color:#FFD700;
+    margin:0;
 }
 
 .container{
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
 }
 
 .card{
-  background:#0A2540;
-  border-radius:15px;
-  padding:20px;
-  margin-bottom:20px;
+    background:#0A2540;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
 }
 
 table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-th,td{
-  padding:12px;
-  text-align:left;
+    width:100%;
+    border-collapse:collapse;
 }
 
 th{
-  color:#FFD700;
+    color:#FFD700;
+    text-align:left;
+    padding:12px;
 }
 
-.rank{
-  font-weight:bold;
+td{
+    padding:12px;
+    border-top:1px solid rgba(255,255,255,.1);
 }
+
+.podium{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+}
+
+.podium-card{
+    background:#0A2540;
+    border-radius:15px;
+    padding:20px;
+    min-width:180px;
+    text-align:center;
+}
+
+.gold{border:2px solid gold;}
+.silver{border:2px solid silver;}
+.bronze{border:2px solid #cd7f32;}
 </style>
 </head>
 
@@ -60,14 +79,17 @@ th{
 
 <header>
 <h1>🏆 FIFA WORLD CUP 2026 POOL</h1>
+<p>Live Leaderboard</p>
 </header>
 
 <div class="container">
 
-<div class="card">
-<h2>Live Leaderboard</h2>
+<div id="podium" class="podium"></div>
 
-<table id="leaderboard">
+<div class="card">
+<h2>Leaderboard</h2>
+
+<table>
 <thead>
 <tr>
 <th>Rank</th>
@@ -75,48 +97,79 @@ th{
 <th>Points</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td colspan="3">Loading...</td>
-</tr>
+<tbody id="leaderboard">
+<tr><td colspan="3">Loading...</td></tr>
 </tbody>
 </table>
-
 </div>
 
 </div>
 
 <script>
-const players = [
-  {name:"Bouz", rank:12, points:0},
-  {name:"Jad", rank:12, points:0},
-  {name:"Azmi", rank:12, points:0},
-  {name:"George", rank:1, points:100},
-  {name:"Oubai", rank:12, points:0},
-  {name:"Aram", rank:1, points:100},
-  {name:"Jacques", rank:1, points:100},
-  {name:"Karl", rank:1, points:100},
-  {name:"Nehad", rank:1, points:100},
-  {name:"Nadim", rank:1, points:100},
-  {name:"Mouz", rank:1, points:100},
-  {name:"Ziad", rank:1, points:100},
-  {name:"Antoine", rank:1, points:100}
-];
 
-players.sort((a,b)=>b.points-a.points);
+const csvUrl =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=457437421&single=true&output=csv";
 
-const tbody=document.querySelector("#leaderboard tbody");
+async function loadLeaderboard(){
 
-tbody.innerHTML="";
+    const response = await fetch(csvUrl);
+    const text = await response.text();
 
-players.forEach((p,index)=>{
-tbody.innerHTML += `
-<tr>
-<td class="rank">${index+1}</td>
-<td>${p.name}</td>
-<td>${p.points}</td>
-</tr>`;
-});
+    const rows = text.trim().split("\n").slice(1);
+
+    let players = rows.map(row=>{
+        const cols = row.split(",");
+
+        return {
+            name: cols[0],
+            rank: Number(cols[1]),
+            points: Number(cols[2])
+        };
+    });
+
+    players.sort((a,b)=>b.points-a.points);
+
+    const tbody =
+    document.getElementById("leaderboard");
+
+    tbody.innerHTML="";
+
+    players.forEach((player,index)=>{
+
+        tbody.innerHTML += `
+        <tr>
+            <td>${index+1}</td>
+            <td>${player.name}</td>
+            <td>${player.points}</td>
+        </tr>
+        `;
+    });
+
+    const podium =
+    document.getElementById("podium");
+
+    podium.innerHTML = "";
+
+    const medals = [
+        {emoji:"🥇",className:"gold"},
+        {emoji:"🥈",className:"silver"},
+        {emoji:"🥉",className:"bronze"}
+    ];
+
+    players.slice(0,3).forEach((player,index)=>{
+
+        podium.innerHTML += `
+        <div class="podium-card ${medals[index].className}">
+            <h2>${medals[index].emoji}</h2>
+            <h3>${player.name}</h3>
+            <p>${player.points} pts</p>
+        </div>
+        `;
+    });
+}
+
+loadLeaderboard();
+
 </script>
 
 </body>
