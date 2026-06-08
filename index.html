@@ -10,7 +10,7 @@ body{
     margin:0;
     background:#041E42;
     color:white;
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
 }
 
 header{
@@ -69,39 +69,71 @@ td{
     text-align:center;
 }
 
-.gold{border:2px solid gold;}
-.silver{border:2px solid silver;}
-.bronze{border:2px solid #cd7f32;}
+.gold{
+    border:2px solid gold;
+}
+
+.silver{
+    border:2px solid silver;
+}
+
+.bronze{
+    border:2px solid #cd7f32;
+}
+
+.nav{
+    text-align:center;
+    margin-top:15px;
+}
+
+.nav a{
+    color:#FFD700;
+    text-decoration:none;
+    margin:0 15px;
+    font-weight:bold;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🏆 FIFA WORLD CUP 2026 POOL</h1>
-<p>Live Leaderboard</p>
+    <h1>🏆 FIFA WORLD CUP 2026 POOL</h1>
+    <p>Live Leaderboard</p>
+
+    <div class="nav">
+        <a href="/">Leaderboard</a>
+        <a href="/players.html">Players</a>
+    </div>
 </header>
 
 <div class="container">
 
-<div id="podium" class="podium"></div>
+    <div id="podium" class="podium"></div>
 
-<div class="card">
-<h2>Leaderboard</h2>
+    <div class="card">
 
-<table>
-<thead>
-<tr>
-<th>Rank</th>
-<th>Player</th>
-<th>Points</th>
-</tr>
-</thead>
-<tbody id="leaderboard">
-<tr><td colspan="3">Loading...</td></tr>
-</tbody>
-</table>
-</div>
+        <h2>Leaderboard</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+
+            <tbody id="leaderboard">
+                <tr>
+                    <td colspan="3">Loading...</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
@@ -112,60 +144,82 @@ const csvUrl =
 
 async function loadLeaderboard(){
 
-    const response = await fetch(csvUrl);
-    const text = await response.text();
+    try {
 
-    const rows = text.trim().split("\n").slice(1);
+        const response = await fetch(csvUrl);
 
-    let players = rows.map(row=>{
-        const cols = row.split(",");
+        if(!response.ok){
+            throw new Error("Failed to fetch leaderboard");
+        }
 
-        return {
-            name: cols[0],
-            rank: Number(cols[1]),
-            points: Number(cols[2])
-        };
-    });
+        const text = await response.text();
 
-    players.sort((a,b)=>b.points-a.points);
+        const rows = text.trim().split("\n").slice(1);
 
-    const tbody =
-    document.getElementById("leaderboard");
+        let players = rows.map(row => {
 
-    tbody.innerHTML="";
+            const cols = row.split(",");
 
-    players.forEach((player,index)=>{
+            return {
+                name: cols[0] || "",
+                rank: Number(cols[1]) || 0,
+                points: Number(cols[2]) || 0
+            };
 
-        tbody.innerHTML += `
-        <tr>
-            <td>${index+1}</td>
-            <td>${player.name}</td>
-            <td>${player.points}</td>
-        </tr>
-        `;
-    });
+        });
 
-    const podium =
-    document.getElementById("podium");
+        players.sort((a,b) => b.points - a.points);
 
-    podium.innerHTML = "";
+        const tbody =
+        document.getElementById("leaderboard");
 
-    const medals = [
-        {emoji:"🥇",className:"gold"},
-        {emoji:"🥈",className:"silver"},
-        {emoji:"🥉",className:"bronze"}
-    ];
+        tbody.innerHTML = "";
 
-    players.slice(0,3).forEach((player,index)=>{
+        players.forEach((player,index)=>{
 
-        podium.innerHTML += `
-        <div class="podium-card ${medals[index].className}">
-            <h2>${medals[index].emoji}</h2>
-            <h3>${player.name}</h3>
-            <p>${player.points} pts</p>
-        </div>
-        `;
-    });
+            tbody.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${player.name}</td>
+                <td>${player.points}</td>
+            </tr>
+            `;
+
+        });
+
+        const podium =
+        document.getElementById("podium");
+
+        podium.innerHTML = "";
+
+        const medals = [
+            {emoji:"🥇", className:"gold"},
+            {emoji:"🥈", className:"silver"},
+            {emoji:"🥉", className:"bronze"}
+        ];
+
+        players.slice(0,3).forEach((player,index)=>{
+
+            podium.innerHTML += `
+            <div class="podium-card ${medals[index].className}">
+                <h2>${medals[index].emoji}</h2>
+                <h3>${player.name}</h3>
+                <p>${player.points} pts</p>
+            </div>
+            `;
+
+        });
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        document.getElementById("leaderboard").innerHTML =
+        "<tr><td colspan='3'>❌ Failed to load leaderboard</td></tr>";
+
+    }
+
 }
 
 loadLeaderboard();
