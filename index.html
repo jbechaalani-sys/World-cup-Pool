@@ -50,15 +50,15 @@ th{
 
 td{
     padding:12px;
-    border-top:1px solid rgba(255,255,255,.1);
+    border-top:1px solid rgba(255,255,255,.15);
 }
 
 .podium{
     display:flex;
     justify-content:center;
     gap:20px;
-    margin-bottom:30px;
     flex-wrap:wrap;
+    margin-bottom:25px;
 }
 
 .podium-card{
@@ -67,22 +67,10 @@ td{
     padding:20px;
     min-width:180px;
     text-align:center;
-}
-
-.gold{
-    border:2px solid gold;
-}
-
-.silver{
-    border:2px solid silver;
-}
-
-.bronze{
-    border:2px solid #cd7f32;
+    border:2px solid #FFD700;
 }
 
 .nav{
-    text-align:center;
     margin-top:15px;
 }
 
@@ -99,7 +87,6 @@ td{
 
 <header>
     <h1>🏆 FIFA WORLD CUP 2026 POOL</h1>
-    <p>Live Leaderboard</p>
 
     <div class="nav">
         <a href="/">Leaderboard</a>
@@ -112,11 +99,9 @@ td{
     <div id="podium" class="podium"></div>
 
     <div class="card">
-
         <h2>Leaderboard</h2>
 
         <table>
-
             <thead>
                 <tr>
                     <th>Rank</th>
@@ -130,7 +115,6 @@ td{
                     <td colspan="3">Loading...</td>
                 </tr>
             </tbody>
-
         </table>
 
     </div>
@@ -142,33 +126,37 @@ td{
 const csvUrl =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=457437421&single=true&output=csv";
 
-async function loadLeaderboard(){
+async function loadLeaderboard() {
 
     try {
 
         const response = await fetch(csvUrl);
 
-        if(!response.ok){
-            throw new Error("Failed to fetch leaderboard");
+        if (!response.ok) {
+            throw new Error("Could not fetch CSV");
         }
 
         const text = await response.text();
 
-        const rows = text.trim().split("\n").slice(1);
+        const rows = text
+            .trim()
+            .split("\n")
+            .filter(r => r.length > 0);
 
-        let players = rows.map(row => {
+        let players = [];
 
-            const cols = row.split(",");
+        for(let i = 1; i < rows.length; i++) {
 
-            return {
+            const cols = rows[i].split(",");
+
+            players.push({
                 name: cols[0] || "",
                 rank: Number(cols[1]) || 0,
                 points: Number(cols[2]) || 0
-            };
+            });
+        }
 
-        });
-
-        players.sort((a,b) => b.points - a.points);
+        players.sort((a,b)=>b.points-a.points);
 
         const tbody =
         document.getElementById("leaderboard");
@@ -184,7 +172,6 @@ async function loadLeaderboard(){
                 <td>${player.points}</td>
             </tr>
             `;
-
         });
 
         const podium =
@@ -192,22 +179,17 @@ async function loadLeaderboard(){
 
         podium.innerHTML = "";
 
-        const medals = [
-            {emoji:"🥇", className:"gold"},
-            {emoji:"🥈", className:"silver"},
-            {emoji:"🥉", className:"bronze"}
-        ];
+        const medals = ["🥇","🥈","🥉"];
 
         players.slice(0,3).forEach((player,index)=>{
 
             podium.innerHTML += `
-            <div class="podium-card ${medals[index].className}">
-                <h2>${medals[index].emoji}</h2>
+            <div class="podium-card">
+                <h2>${medals[index]}</h2>
                 <h3>${player.name}</h3>
                 <p>${player.points} pts</p>
             </div>
             `;
-
         });
 
     }
@@ -219,7 +201,6 @@ async function loadLeaderboard(){
         "<tr><td colspan='3'>❌ Failed to load leaderboard</td></tr>";
 
     }
-
 }
 
 loadLeaderboard();
