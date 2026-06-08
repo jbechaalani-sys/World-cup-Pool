@@ -1,45 +1,124 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
-  <title>World Cup Pool 2026</title>
-  <style>
-    body{
-      background:#041E42;
-      color:white;
-      font-family:Arial,sans-serif;
-      text-align:center;
-      padding:40px;
-    }
-    h1{
-      color:#FFD700;
-    }
-    .card{
-      background:#0A2540;
-      padding:20px;
-      margin:20px auto;
-      border-radius:15px;
-      max-width:800px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>World Cup Pool 2026</title>
+
+<style>
+body{
+  margin:0;
+  background:#041E42;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+
+header{
+  background:#03152d;
+  padding:20px;
+  text-align:center;
+}
+
+h1{
+  color:#FFD700;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
+
+.card{
+  background:#0A2540;
+  border-radius:15px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:12px;
+  text-align:left;
+}
+
+th{
+  color:#FFD700;
+}
+
+.rank{
+  font-weight:bold;
+}
+</style>
 </head>
+
 <body>
 
+<header>
 <h1>🏆 FIFA WORLD CUP 2026 POOL</h1>
+</header>
+
+<div class="container">
 
 <div class="card">
-  <h2>Live Leaderboard</h2>
-  <p>Loading data from Google Sheets...</p>
+<h2>Live Leaderboard</h2>
+
+<table id="leaderboard">
+<thead>
+<tr>
+<th>Rank</th>
+<th>Player</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="3">Loading...</td>
+</tr>
+</tbody>
+</table>
+
 </div>
 
-<div class="card">
-  <h2>Fixtures</h2>
-  <p>Coming Soon</p>
 </div>
 
-<div class="card">
-  <h2>Player Predictions</h2>
-  <p>Coming Soon</p>
-</div>
+<script>
+const players = [
+  {name:"Bouz", rank:12, points:0},
+  {name:"Jad", rank:12, points:0},
+  {name:"Azmi", rank:12, points:0},
+  {name:"George", rank:1, points:100},
+  {name:"Oubai", rank:12, points:0},
+  {name:"Aram", rank:1, points:100},
+  {name:"Jacques", rank:1, points:100},
+  {name:"Karl", rank:1, points:100},
+  {name:"Nehad", rank:1, points:100},
+  {name:"Nadim", rank:1, points:100},
+  {name:"Mouz", rank:1, points:100},
+  {name:"Ziad", rank:1, points:100},
+  {name:"Antoine", rank:1, points:100}
+];
+
+players.sort((a,b)=>b.points-a.points);
+
+const tbody=document.querySelector("#leaderboard tbody");
+
+tbody.innerHTML="";
+
+players.forEach((p,index)=>{
+tbody.innerHTML += `
+<tr>
+<td class="rank">${index+1}</td>
+<td>${p.name}</td>
+<td>${p.points}</td>
+</tr>`;
+});
+</script>
 
 </body>
 </html>
+```
