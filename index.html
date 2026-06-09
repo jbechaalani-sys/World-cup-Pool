@@ -64,17 +64,31 @@ h1{
 
 .nav{
     margin-top:25px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
 }
 
 .nav a{
+    background:#0A2540;
+    border:2px solid #FFD700;
     color:#FFD700;
     text-decoration:none;
-    margin-right:20px;
+    padding:12px 18px;
+    border-radius:12px;
     font-weight:bold;
+    min-width:160px;
+    text-align:center;
+    transition:all .3s ease;
+    box-shadow:0 4px 10px rgba(0,0,0,.3);
 }
 
 .nav a:hover{
-    color:white;
+    background:#FFD700;
+    color:#041E42;
+    transform:translateY(-3px);
+    box-shadow:0 8px 18px rgba(255,215,0,.4);
+}
 }
 
 .container{
