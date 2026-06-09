@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,6 +5,7 @@
 <title>Players - World Cup Pool</title>
 
 <style>
+
 body{
     margin:0;
     background:#041E42;
@@ -23,38 +23,6 @@ h1{
     color:#FFD700;
 }
 
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:20px;
-}
-
-.player-card{
-    background:#0A2540;
-    border-radius:15px;
-    padding:20px;
-    margin-bottom:15px;
-}
-
-.player-name{
-    color:#FFD700;
-    font-size:24px;
-    font-weight:bold;
-}
-
-.stats{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-    margin-top:10px;
-}
-
-.stat{
-    background:#03152d;
-    padding:10px 15px;
-    border-radius:10px;
-}
-
 .nav{
     margin-top:15px;
 }
@@ -65,22 +33,72 @@ h1{
     margin:0 15px;
     font-weight:bold;
 }
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+.player-card{
+    background:#0A2540;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:20px;
+    box-shadow:0 10px 20px rgba(0,0,0,.35);
+}
+
+.player-name{
+    color:#FFD700;
+    font-size:26px;
+    font-weight:bold;
+}
+
+.stats{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.stat{
+    background:#03152d;
+    padding:10px 15px;
+    border-radius:10px;
+}
+
+.prediction-btn{
+    display:inline-block;
+    margin-top:20px;
+    background:#FFD700;
+    color:#041E42;
+    text-decoration:none;
+    padding:12px 18px;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.prediction-btn:hover{
+    opacity:.85;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-    <h1>👤 Players</h1>
 
-    <div class="nav">
+<h1>👤 Players</h1>
+
+<div class="nav">
     <a href="/">🏆 Leaderboard</a>
     <a href="/players.html">👤 Players</a>
     <a href="/fixtures.html">⚽ Fixtures</a>
     <a href="/stats.html">📊 Stats</a>
     <a href="/rules.html">🎁 Rules & Prizes</a>
 </div>
-    
+
 </header>
 
 <div class="container" id="players">
@@ -89,65 +107,113 @@ Loading players...
 
 <script>
 
-const csvUrl =
+const playersUrl =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=816094404&single=true&output=csv";
 
-async function loadPlayers() {
+const linksUrl =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=1313899245&single=true&output=csv";
 
-    try {
+async function loadPlayers(){
 
-        const response = await fetch(csvUrl);
+try{
 
-        if(!response.ok){
-            throw new Error("Failed to fetch CSV");
-        }
+const playersResponse = await fetch(playersUrl);
+const playersText = await playersResponse.text();
 
-        const text = await response.text();
+const linksResponse = await fetch(linksUrl);
+const linksText = await linksResponse.text();
 
-        const rows = text.trim().split("\n").slice(1);
+const playerRows =
+playersText.trim().split("\n").slice(1);
 
-        const container =
-        document.getElementById("players");
+const linkRows =
+linksText.trim().split("\n").slice(1);
 
-        container.innerHTML = "";
+const links = {};
 
-        rows.forEach(row => {
+linkRows.forEach(row=>{
 
-            const cols = row.split(",");
+const cols = row.split(",");
 
-            const name = cols[0] || "";
-            const rank = cols[1] || "";
-            const points = cols[2] || "";
-            const exact = cols[3] || "";
-            const winners = cols[4] || "";
-            const winnerPick = cols[5] || "";
+links[cols[0]?.trim()] =
+cols[1]?.trim();
 
-            container.innerHTML += `
-            <div class="player-card">
+});
 
-                <div class="player-name">
-                    ${name}
-                </div>
+const container =
+document.getElementById("players");
 
-                <div class="stats">
-                    <div class="stat">🏆 Rank: ${rank}</div>
-                    <div class="stat">💯 Points: ${points}</div>
-                    <div class="stat">🎯 Exact Scores: ${exact}</div>
-                    <div class="stat">✅ Correct Winners: ${winners}</div>
-                    <div class="stat">🌍 Winner Pick: ${winnerPick}</div>
-                </div>
+container.innerHTML = "";
 
-            </div>
-            `;
-        });
+playerRows.forEach(row=>{
 
-    } catch(error) {
+const cols = row.split(",");
 
-        console.error(error);
+const name = cols[0] || "";
+const rank = cols[1] || "0";
+const points = cols[2] || "0";
+const exact = cols[3] || "0";
+const winners = cols[4] || "0";
+const winnerPick = cols[5] || "";
 
-        document.getElementById("players").innerHTML =
-        "<h2>❌ Failed to load player data.</h2>";
-    }
+const predictionLink =
+links[name] || "#";
+
+container.innerHTML += `
+
+<div class="player-card">
+
+<div class="player-name">
+${name}
+</div>
+
+<div class="stats">
+
+<div class="stat">
+🏆 Rank: ${rank}
+</div>
+
+<div class="stat">
+💯 Points: ${points}
+</div>
+
+<div class="stat">
+🎯 Exact Scores: ${exact}
+</div>
+
+<div class="stat">
+✅ Correct Winners: ${winners}
+</div>
+
+<div class="stat">
+🌍 Winner Pick: ${winnerPick}
+</div>
+
+</div>
+
+<a
+class="prediction-btn"
+href="${predictionLink}"
+target="_blank">
+📄 View Prediction Sheet
+</a>
+
+</div>
+
+`;
+
+});
+
+}
+catch(error){
+
+console.error(error);
+
+document.getElementById("players").innerHTML =
+"<h2>Failed to load players</h2>";
+
+}
+
 }
 
 loadPlayers();
@@ -156,4 +222,3 @@ loadPlayers();
 
 </body>
 </html>
-```
