@@ -1,0 +1,217 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Stats - FIFA World Cup Pool</title>
+
+<style>
+body{
+    margin:0;
+    background:#041E42;
+    color:white;
+    font-family:Arial,sans-serif;
+}
+
+header{
+    background:#03152d;
+    text-align:center;
+    padding:25px;
+}
+
+h1{
+    color:#FFD700;
+}
+
+.nav{
+    margin-top:15px;
+}
+
+.nav a{
+    color:#FFD700;
+    text-decoration:none;
+    margin:0 15px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#0A2540;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    color:#FFD700;
+    text-align:left;
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    border-top:1px solid rgba(255,255,255,.15);
+}
+
+.podium{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.podium-card{
+    background:#0A2540;
+    border-radius:15px;
+    padding:20px;
+    min-width:180px;
+    text-align:center;
+    border:2px solid gold;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>📊 World Cup Pool Statistics</h1>
+
+<div class="nav">
+    <a href="/">🏆 Leaderboard</a>
+    <a href="/players.html">👤 Players</a>
+    <a href="/fixtures.html">⚽ Fixtures</a>
+    <a href="/stats.html">📊 Stats</a>
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="podium" id="podium"></div>
+
+<div class="card">
+
+<h2>Player Statistics</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Player</th>
+<th>Exact Scores</th>
+<th>Correct Winners</th>
+<th>Accuracy %</th>
+</tr>
+</thead>
+
+<tbody id="statsTable">
+<tr>
+<td colspan="4">Loading...</td>
+</tr>
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+const csvUrl =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=889827253&single=true&output=csv";
+
+async function loadStats(){
+
+try{
+
+const response = await fetch(csvUrl);
+const text = await response.text();
+
+const rows = text.trim().split("\n").slice(1);
+
+let players = [];
+
+rows.forEach(row=>{
+
+const cols = row.split(",");
+
+players.push({
+name: cols[0] || "",
+exact: Number(cols[1]) || 0,
+winners: Number(cols[2]) || 0,
+accuracy: Number(cols[3]) || 0
+});
+
+});
+
+players.sort((a,b)=>b.exact-a.exact);
+
+const tbody =
+document.getElementById("statsTable");
+
+tbody.innerHTML="";
+
+players.forEach(player=>{
+
+tbody.innerHTML += `
+<tr>
+<td>${player.name}</td>
+<td>${player.exact}</td>
+<td>${player.winners}</td>
+<td>${player.accuracy}%</td>
+</tr>
+`;
+
+});
+
+const podium =
+document.getElementById("podium");
+
+podium.innerHTML="";
+
+const medals = ["🥇","🥈","🥉"];
+
+players.slice(0,3).forEach((player,index)=>{
+
+podium.innerHTML += `
+<div class="podium-card">
+<h2>${medals[index]}</h2>
+<h3>${player.name}</h3>
+<p>${player.exact} Exact Scores</p>
+</div>
+`;
+
+});
+
+}
+catch(error){
+
+console.error(error);
+
+document.getElementById("statsTable").innerHTML =
+"<tr><td colspan='4'>Failed to load stats</td></tr>";
+
+}
+
+}
+
+loadStats();
+
+</script>
+
+</body>
+</html>
+```
