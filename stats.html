@@ -6,6 +6,7 @@
 <title>Stats - FIFA World Cup Pool</title>
 
 <style>
+
 body{
     margin:0;
     background:#041E42;
@@ -75,9 +76,20 @@ td{
     background:#0A2540;
     border-radius:15px;
     padding:20px;
-    min-width:180px;
+    min-width:200px;
     text-align:center;
-    border:2px solid gold;
+}
+
+.gold{
+    border:3px solid gold;
+}
+
+.silver{
+    border:3px solid silver;
+}
+
+.bronze{
+    border:3px solid #cd7f32;
 }
 
 footer{
@@ -86,6 +98,7 @@ footer{
     margin-top:40px;
     opacity:.7;
 }
+
 </style>
 </head>
 
@@ -120,12 +133,13 @@ footer{
 <th>Player</th>
 <th>Exact Scores</th>
 <th>Correct Winners</th>
+<th>Stats Score</th>
 </tr>
 </thead>
 
 <tbody id="statsTable">
 <tr>
-<td colspan="3">Loading...</td>
+<td colspan="4">Loading...</td>
 </tr>
 </tbody>
 
@@ -136,7 +150,7 @@ footer{
 </div>
 
 <footer>
-FIFA World Cup 2026 Pool
+FIFA World Cup 2026 Prediction League
 </footer>
 
 <script>
@@ -151,23 +165,25 @@ try{
 const response = await fetch(csvUrl);
 const text = await response.text();
 
-const rows = text.trim().split("\n").slice(1);
+const rows =
+text.trim().split("\n").slice(1);
 
-let players = [];
+let players=[];
 
 rows.forEach(row=>{
 
-const cols = row.split(",");
+const cols=row.split(",");
 
 players.push({
 name: cols[0] || "",
 exact: Number(cols[1]) || 0,
-winners: Number(cols[2]) || 0
+winners: Number(cols[2]) || 0,
+score: Number(cols[3]) || 0
 });
 
 });
 
-players.sort((a,b)=>b.winners-a.winners);
+players.sort((a,b)=>b.score-a.score);
 
 const tbody =
 document.getElementById("statsTable");
@@ -181,6 +197,7 @@ tbody.innerHTML += `
 <td>${player.name}</td>
 <td>${player.exact}</td>
 <td>${player.winners}</td>
+<td>${player.score}</td>
 </tr>
 `;
 
@@ -191,16 +208,21 @@ document.getElementById("podium");
 
 podium.innerHTML="";
 
-const medals = ["🥇","🥈","🥉"];
+const medals=[
+{emoji:"🥇",className:"gold"},
+{emoji:"🥈",className:"silver"},
+{emoji:"🥉",className:"bronze"}
+];
 
 players.slice(0,3).forEach((player,index)=>{
 
 podium.innerHTML += `
-<div class="podium-card">
-<h2>${medals[index]}</h2>
+<div class="podium-card ${medals[index].className}">
+<h2>${medals[index].emoji}</h2>
 <h3>${player.name}</h3>
-<p>${player.winners} Correct Winners</p>
+<p><strong>${player.score}</strong> Stats Score</p>
 <p>${player.exact} Exact Scores</p>
+<p>${player.winners} Correct Winners</p>
 </div>
 `;
 
@@ -212,7 +234,7 @@ catch(error){
 console.error(error);
 
 document.getElementById("statsTable").innerHTML =
-"<tr><td colspan='3'>Failed to load stats</td></tr>";
+"<tr><td colspan='4'>Failed to load stats</td></tr>";
 
 }
 
