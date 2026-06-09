@@ -202,9 +202,9 @@ h1{
     font-weight:bold;
 }
 
-.pick-count{
-    color:#FFD700;
+.pick-team{
     font-weight:bold;
+    font-size:18px;
 }
 }
 
@@ -506,11 +506,37 @@ tracker.innerHTML="";
 
 sorted.forEach(([team,count])=>{
 
+const flags = {
+    "Brazil":"🇧🇷",
+    "Spain":"🇪🇸",
+    "Argentina":"🇦🇷",
+    "France":"🇫🇷",
+    "England":"🏴",
+    "Germany":"🇩🇪",
+    "Portugal":"🇵🇹",
+    "Belgium":"🇧🇪",
+    "Netherlands":"🇳🇱",
+    "Uruguay":"🇺🇾",
+    "Croatia":"🇭🇷",
+    "Mexico":"🇲🇽",
+    "USA":"🇺🇸",
+    "Canada":"🇨🇦",
+    "Morocco":"🇲🇦",
+    "Japan":"🇯🇵",
+    "South Korea":"🇰🇷",
+    "Switzerland":"🇨🇭",
+    "Colombia":"🇨🇴",
+    "Senegal":"🇸🇳"
+};
+
 tracker.innerHTML += `
 <div class="pick-row">
-<div class="pick-team">${team}</div>
+<div class="pick-team">
+${flags[team] || "🏳️"} ${team}
+</div>
 <div class="pick-count">${count}</div>
 </div>
+`;
 `;
 
 });
