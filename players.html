@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Players - World Cup Pool</title>
+<title>Fixtures - FIFA World Cup Pool</title>
 
 <style>
 body{
@@ -23,41 +23,54 @@ h1{
     color:#FFD700;
 }
 
+.nav{
+    margin-top:15px;
+}
+
+.nav a{
+    color:#FFD700;
+    text-decoration:none;
+    margin:0 15px;
+    font-weight:bold;
+}
+
 .container{
     max-width:1200px;
     margin:auto;
     padding:20px;
 }
 
-.player-card{
+.match-card{
     background:#0A2540;
     border-radius:15px;
     padding:20px;
     margin-bottom:15px;
 }
 
-.player-name{
+.group{
     color:#FFD700;
-    font-size:24px;
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.teams{
+    font-size:22px;
     font-weight:bold;
 }
 
-.stats{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
+.details{
     margin-top:10px;
+    opacity:.8;
 }
 
-.stat{
-    background:#03152d;
-    padding:10px 15px;
-    border-radius:10px;
-}
-
-a{
-    color:#FFD700;
-    text-decoration:none;
+.status{
+    display:inline-block;
+    margin-top:10px;
+    background:#FFD700;
+    color:#041E42;
+    padding:5px 10px;
+    border-radius:8px;
+    font-weight:bold;
 }
 </style>
 </head>
@@ -65,78 +78,91 @@ a{
 <body>
 
 <header>
-<h1>👤 Players</h1>
-<p><a href="/">🏆 Back to Leaderboard</a></p>
+    <h1>⚽ FIFA World Cup 2026 Fixtures</h1>
+
+    <div class="nav">
+        <a href="/">🏆 Leaderboard</a>
+        <a href="/players.html">👤 Players</a>
+        <a href="/fixtures.html">⚽ Fixtures</a>
+    </div>
 </header>
 
-<div class="container" id="players">
-Loading players...
+<div class="container" id="fixtures">
+Loading fixtures...
 </div>
 
 <script>
 
 const csvUrl =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=816094404&single=true&output=csv";
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=186871962&single=true&output=csv";
 
-async function loadPlayers() {
+async function loadFixtures(){
 
-    try {
+    try{
 
         const response = await fetch(csvUrl);
-
-        if(!response.ok){
-            throw new Error("Failed to fetch CSV");
-        }
-
         const text = await response.text();
 
         const rows = text.trim().split("\n").slice(1);
 
         const container =
-        document.getElementById("players");
+        document.getElementById("fixtures");
 
         container.innerHTML = "";
 
-        rows.forEach(row => {
+        rows.forEach(row=>{
 
             const cols = row.split(",");
 
-            const name = cols[0] || "";
-            const rank = cols[1] || "";
-            const points = cols[2] || "";
-            const exact = cols[3] || "";
-            const winners = cols[4] || "";
-            const winnerPick = cols[5] || "";
+            const matchNo = cols[0] || "";
+            const date = cols[1] || "";
+            const time = cols[2] || "";
+            const group = cols[3] || "";
+            const home = cols[4] || "";
+            const away = cols[5] || "";
+            const homeScore = cols[6] || "";
+            const awayScore = cols[7] || "";
+            const status = cols[8] || "Upcoming";
+
+            let scoreDisplay =
+                homeScore && awayScore
+                ? `${homeScore} - ${awayScore}`
+                : "vs";
 
             container.innerHTML += `
-            <div class="player-card">
+            <div class="match-card">
 
-                <div class="player-name">
-                    ${name}
+                <div class="group">
+                    Match ${matchNo} • ${group}
                 </div>
 
-                <div class="stats">
-                    <div class="stat">🏆 Rank: ${rank}</div>
-                    <div class="stat">💯 Points: ${points}</div>
-                    <div class="stat">🎯 Exact Scores: ${exact}</div>
-                    <div class="stat">✅ Correct Winners: ${winners}</div>
-                    <div class="stat">🌍 Winner Pick: ${winnerPick}</div>
+                <div class="teams">
+                    ${home} ${scoreDisplay} ${away}
+                </div>
+
+                <div class="details">
+                    ${date} • ${time}
+                </div>
+
+                <div class="status">
+                    ${status}
                 </div>
 
             </div>
             `;
         });
 
-    } catch(error) {
+    }
+    catch(error){
 
         console.error(error);
 
-        document.getElementById("players").innerHTML =
-        "<h2>❌ Failed to load player data.</h2><p>Check the browser console (F12).</p>";
+        document.getElementById("fixtures").innerHTML =
+        "<h2>❌ Failed to load fixtures.</h2>";
     }
 }
 
-loadPlayers();
+loadFixtures();
 
 </script>
 
