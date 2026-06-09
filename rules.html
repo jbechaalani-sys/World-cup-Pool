@@ -1,0 +1,166 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rules & Prizes - FIFA World Cup Pool</title>
+
+<style>
+body{
+    margin:0;
+    background:#041E42;
+    color:white;
+    font-family:Arial,sans-serif;
+}
+
+header{
+    background:#03152d;
+    text-align:center;
+    padding:25px;
+}
+
+h1{
+    color:#FFD700;
+}
+
+.nav{
+    margin-top:15px;
+}
+
+.nav a{
+    color:#FFD700;
+    text-decoration:none;
+    margin:0 15px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#0A2540;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    color:#FFD700;
+    text-align:left;
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    border-top:1px solid rgba(255,255,255,.15);
+}
+
+.rule-title{
+    color:#FFD700;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>🎁 Rules & Prizes</h1>
+
+<div class="nav">
+    <a href="/">🏆 Leaderboard</a>
+    <a href="/players.html">👤 Players</a>
+    <a href="/fixtures.html">⚽ Fixtures</a>
+    <a href="/stats.html">📊 Stats</a>
+    <a href="/rules.html">🎁 Rules & Prizes</a>
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Competition Rules</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Rule</th>
+<th>Value</th>
+</tr>
+</thead>
+
+<tbody id="rulesTable">
+<tr>
+<td colspan="2">Loading...</td>
+</tr>
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+const csvUrl =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=1727207293&single=true&output=csv";
+
+async function loadRules(){
+
+    try{
+
+        const response = await fetch(csvUrl);
+        const text = await response.text();
+
+        const rows = text.trim().split("\n").slice(1);
+
+        const tbody =
+        document.getElementById("rulesTable");
+
+        tbody.innerHTML = "";
+
+        rows.forEach(row=>{
+
+            const cols = row.split(",");
+
+            const rule = cols[0] || "";
+            const value = cols[1] || "";
+
+            tbody.innerHTML += `
+            <tr>
+                <td class="rule-title">${rule}</td>
+                <td>${value}</td>
+            </tr>
+            `;
+        });
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        document.getElementById("rulesTable").innerHTML =
+        "<tr><td colspan='2'>❌ Failed to load rules</td></tr>";
+    }
+}
+
+loadRules();
+
+</script>
+
+</body>
+</html>
+```
