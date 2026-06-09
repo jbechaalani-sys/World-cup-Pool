@@ -3,9 +3,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>FIFA World Cup 2026 Pool</title>
+<title>FIFA World Cup 2026 Prediction League</title>
 
 <style>
+
 body{
     margin:0;
     background:#041E42;
@@ -15,17 +16,31 @@ body{
 
 header{
     text-align:center;
-    padding:30px;
-    background:#03152d;
+    padding:50px 20px;
+    background:linear-gradient(135deg,#03152d,#0A2540);
+    border-bottom:3px solid #FFD700;
 }
 
 h1{
     color:#FFD700;
     margin:0;
+    font-size:48px;
+    letter-spacing:2px;
+}
+
+.subtitle{
+    font-size:28px;
+    margin-top:10px;
+}
+
+.info{
+    color:#FFD700;
+    font-size:18px;
+    margin-top:15px;
 }
 
 .nav{
-    margin-top:15px;
+    margin-top:25px;
 }
 
 .nav a{
@@ -33,19 +48,67 @@ h1{
     text-decoration:none;
     margin:0 15px;
     font-weight:bold;
+    font-size:16px;
+}
+
+.nav a:hover{
+    color:white;
 }
 
 .container{
-    max-width:1000px;
+    max-width:1200px;
     margin:auto;
-    padding:20px;
+    padding:25px;
+}
+
+.hero{
+    text-align:center;
+    padding:30px;
+}
+
+.hero h2{
+    color:#FFD700;
+}
+
+.podium{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
+
+.podium-card{
+    background:linear-gradient(135deg,#0A2540,#123E6A);
+    border-radius:20px;
+    padding:25px;
+    min-width:220px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.4);
+    transition:.3s;
+}
+
+.podium-card:hover{
+    transform:translateY(-5px);
+}
+
+.gold{
+    border:3px solid gold;
+}
+
+.silver{
+    border:3px solid silver;
+}
+
+.bronze{
+    border:3px solid #cd7f32;
 }
 
 .card{
     background:#0A2540;
-    border-radius:15px;
-    padding:20px;
-    margin-bottom:20px;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 10px 20px rgba(0,0,0,.3);
 }
 
 table{
@@ -56,41 +119,24 @@ table{
 th{
     color:#FFD700;
     text-align:left;
-    padding:12px;
+    padding:14px;
 }
 
 td{
-    padding:12px;
+    padding:14px;
     border-top:1px solid rgba(255,255,255,.15);
 }
 
-.podium{
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    flex-wrap:wrap;
-    margin-bottom:25px;
+tr:hover{
+    background:rgba(255,255,255,.05);
 }
 
-.podium-card{
-    background:#0A2540;
-    border-radius:15px;
-    padding:20px;
-    min-width:180px;
+footer{
     text-align:center;
+    padding:30px;
+    opacity:.7;
 }
 
-.gold{
-    border:2px solid gold;
-}
-
-.silver{
-    border:2px solid silver;
-}
-
-.bronze{
-    border:2px solid #cd7f32;
-}
 </style>
 </head>
 
@@ -98,8 +144,16 @@ td{
 
 <header>
 
-    <h1>🏆 FIFA WORLD CUP 2026 POOL</h1>
-    
+<h1>🏆 FIFA WORLD CUP 2026</h1>
+
+<div class="subtitle">
+Prediction League
+</div>
+
+<div class="info">
+17 Players • 104 Matches • Live Rankings
+</div>
+
 <div class="nav">
     <a href="/">🏆 Leaderboard</a>
     <a href="/players.html">👤 Players</a>
@@ -107,123 +161,134 @@ td{
     <a href="/stats.html">📊 Stats</a>
     <a href="/rules.html">🎁 Rules & Prizes</a>
 </div>
-   
 
 </header>
 
 <div class="container">
 
-    <div id="podium" class="podium"></div>
+<div class="hero">
+<h2>⚽ The Ultimate World Cup Prediction Challenge</h2>
+<p>Follow live rankings, player stats and tournament predictions.</p>
+</div>
 
-    <div class="card">
+<div id="podium" class="podium"></div>
 
-        <h2>Leaderboard</h2>
+<div class="card">
 
-        <table>
+<h2>🏆 Leaderboard</h2>
 
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Player</th>
-                    <th>Points</th>
-                </tr>
-            </thead>
+<table>
 
-            <tbody id="leaderboard">
-                <tr>
-                    <td colspan="3">Loading...</td>
-                </tr>
-            </tbody>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Player</th>
+<th>Points</th>
+</tr>
+</thead>
 
-        </table>
+<tbody id="leaderboard">
+<tr>
+<td colspan="3">Loading...</td>
+</tr>
+</tbody>
 
-    </div>
+</table>
 
 </div>
+
+</div>
+
+<footer>
+FIFA World Cup 2026 Prediction League
+</footer>
 
 <script>
 
 const csvUrl =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=457437421&single=true&output=csv";
 
-async function loadLeaderboard() {
+async function loadLeaderboard(){
 
-    try {
+try{
 
-        const response = await fetch(csvUrl);
+const response = await fetch(csvUrl);
 
-        if (!response.ok) {
-            throw new Error("Could not fetch CSV");
-        }
+if(!response.ok){
+throw new Error("Failed to load");
+}
 
-        const text = await response.text();
+const text = await response.text();
 
-        const rows = text
-            .trim()
-            .split("\n")
-            .filter(r => r.length > 0);
+const rows =
+text.trim().split("\n").slice(1);
 
-        let players = [];
+let players = [];
 
-        for(let i = 1; i < rows.length; i++) {
+rows.forEach(row=>{
 
-            const cols = rows[i].split(",");
+const cols = row.split(",");
 
-            players.push({
-                name: cols[0] || "",
-                rank: Number(cols[1]) || 0,
-                points: Number(cols[2]) || 0
-            });
-        }
+players.push({
+name: cols[0] || "",
+rank: Number(cols[1]) || 0,
+points: Number(cols[2]) || 0
+});
 
-        players.sort((a,b)=>b.points-a.points);
+});
 
-        const tbody =
-        document.getElementById("leaderboard");
+players.sort((a,b)=>b.points-a.points);
 
-        tbody.innerHTML = "";
+const tbody =
+document.getElementById("leaderboard");
 
-        players.forEach((player,index)=>{
+tbody.innerHTML = "";
 
-            tbody.innerHTML += `
-            <tr>
-                <td>${index + 1}</td>
-                <td>${player.name}</td>
-                <td>${player.points}</td>
-            </tr>
-            `;
-        });
+players.forEach((player,index)=>{
 
-        const podium =
-        document.getElementById("podium");
+tbody.innerHTML += `
+<tr>
+<td>${index+1}</td>
+<td>${player.name}</td>
+<td>${player.points}</td>
+</tr>
+`;
 
-        podium.innerHTML = "";
+});
 
-        const medals = [
-            {emoji:"🥇",className:"gold"},
-            {emoji:"🥈",className:"silver"},
-            {emoji:"🥉",className:"bronze"}
-        ];
+const podium =
+document.getElementById("podium");
 
-        players.slice(0,3).forEach((player,index)=>{
+podium.innerHTML = "";
 
-            podium.innerHTML += `
-            <div class="podium-card ${medals[index].className}">
-                <h2>${medals[index].emoji}</h2>
-                <h3>${player.name}</h3>
-                <p>${player.points} pts</p>
-            </div>
-            `;
-        });
+const medals = [
+{emoji:"🥇",className:"gold"},
+{emoji:"🥈",className:"silver"},
+{emoji:"🥉",className:"bronze"}
+];
 
-    }
-    catch(error){
+players.slice(0,3).forEach((player,index)=>{
 
-        console.error(error);
+podium.innerHTML += `
+<div class="podium-card ${medals[index].className}">
+<h1>${medals[index].emoji}</h1>
+<h2>${player.name}</h2>
+<h3>${player.points} PTS</h3>
+</div>
+`;
 
-        document.getElementById("leaderboard").innerHTML =
-        "<tr><td colspan='3'>❌ Failed to load leaderboard</td></tr>";
-    }
+});
+
+}
+catch(error){
+
+console.error(error);
+
+document.getElementById("leaderboard").innerHTML =
+"<tr><td colspan='3'>Failed to load leaderboard</td></tr>";
+
+}
+
 }
 
 loadLeaderboard();
