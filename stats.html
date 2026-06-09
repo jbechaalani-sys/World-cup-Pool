@@ -79,6 +79,13 @@ td{
     text-align:center;
     border:2px solid gold;
 }
+
+footer{
+    text-align:center;
+    padding:20px;
+    margin-top:40px;
+    opacity:.7;
+}
 </style>
 </head>
 
@@ -113,13 +120,12 @@ td{
 <th>Player</th>
 <th>Exact Scores</th>
 <th>Correct Winners</th>
-
 </tr>
 </thead>
 
 <tbody id="statsTable">
 <tr>
-<td colspan="4">Loading...</td>
+<td colspan="3">Loading...</td>
 </tr>
 </tbody>
 
@@ -128,6 +134,10 @@ td{
 </div>
 
 </div>
+
+<footer>
+FIFA World Cup 2026 Pool
+</footer>
 
 <script>
 
@@ -152,13 +162,12 @@ const cols = row.split(",");
 players.push({
 name: cols[0] || "",
 exact: Number(cols[1]) || 0,
-winners: Number(cols[2]) || 0,
-accuracy: Number(cols[3]) || 0
+winners: Number(cols[2]) || 0
 });
 
 });
 
-players.sort((a,b)=>b.exact-a.exact);
+players.sort((a,b)=>b.winners-a.winners);
 
 const tbody =
 document.getElementById("statsTable");
@@ -172,7 +181,6 @@ tbody.innerHTML += `
 <td>${player.name}</td>
 <td>${player.exact}</td>
 <td>${player.winners}</td>
-<td>${player.accuracy}%</td>
 </tr>
 `;
 
@@ -191,6 +199,7 @@ podium.innerHTML += `
 <div class="podium-card">
 <h2>${medals[index]}</h2>
 <h3>${player.name}</h3>
+<p>${player.winners} Correct Winners</p>
 <p>${player.exact} Exact Scores</p>
 </div>
 `;
@@ -203,7 +212,7 @@ catch(error){
 console.error(error);
 
 document.getElementById("statsTable").innerHTML =
-"<tr><td colspan='4'>Failed to load stats</td></tr>";
+"<tr><td colspan='3'>Failed to load stats</td></tr>";
 
 }
 
