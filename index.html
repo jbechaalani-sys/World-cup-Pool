@@ -134,21 +134,44 @@ h1{
     text-align:center;
     box-shadow:0 10px 20px rgba(0,0,0,.3);
 }
-
 .summary-grid{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(3,1fr);
     gap:20px;
 }
 
-.summary-grid h3{
-    color:#FFD700;
-    font-size:36px;
+.prize-card{
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
+
+.gold-prize{
+    border:3px solid gold;
+    background:linear-gradient(135deg,#4a3a00,#7a6200);
+}
+
+.silver-prize{
+    border:3px solid silver;
+    background:linear-gradient(135deg,#3a3a3a,#5a5a5a);
+}
+
+.bronze-prize{
+    border:3px solid #cd7f32;
+    background:linear-gradient(135deg,#4a2a00,#7a4700);
+}
+
+.prize-card h3{
+    color:white;
+    font-size:32px;
     margin:0;
 }
 
-.summary-grid p{
-    margin:5px 0 0;
+.prize-card p{
+    margin-top:10px;
+    font-weight:bold;
+}
+
 }
 
 .card{
@@ -260,28 +283,23 @@ Follow live rankings, player statistics and tournament predictions.
 
 <div class="summary-card">
 
-<h2>🏆 Pool Summary</h2>
+<h2>💰 Prize Fund</h2>
 
 <div class="summary-grid">
 
-<div>
-<h3>17</h3>
-<p>Players</p>
+<div class="prize-card bronze-prize">
+<h3>200 AED</h3>
+<p>🏅 Group Stage Winner</p>
 </div>
 
-<div>
-<h3>104</h3>
-<p>Matches</p>
+<div class="prize-card gold-prize">
+<h3>1000 AED</h3>
+<p>🥇 Tournament Champion</p>
 </div>
 
-<div>
-<h3>3</h3>
-<p>Pts Exact Score</p>
-</div>
-
-<div>
-<h3>1</h3>
-<p>Pt Correct Winner</p>
+<div class="prize-card silver-prize">
+<h3>500 AED</h3>
+<p>🥈 Runner-Up</p>
 </div>
 
 </div>
