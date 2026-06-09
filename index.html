@@ -15,10 +15,21 @@ body{
 }
 
 header{
-    text-align:center;
-    padding:50px 20px;
     background:linear-gradient(135deg,#03152d,#0A2540);
     border-bottom:3px solid #FFD700;
+    padding:30px;
+}
+
+.header-content{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.header-left{
+    text-align:left;
 }
 
 h1{
@@ -35,8 +46,20 @@ h1{
 
 .info{
     color:#FFD700;
-    font-size:18px;
     margin-top:15px;
+    font-size:18px;
+}
+
+.trophy{
+    height:220px;
+    width:auto;
+    animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+    100%{transform:translateY(0);}
 }
 
 .nav{
@@ -46,9 +69,8 @@ h1{
 .nav a{
     color:#FFD700;
     text-decoration:none;
-    margin:0 15px;
+    margin-right:20px;
     font-weight:bold;
-    font-size:16px;
 }
 
 .nav a:hover{
@@ -63,7 +85,7 @@ h1{
 
 .hero{
     text-align:center;
-    padding:30px;
+    padding:20px;
 }
 
 .hero h2{
@@ -108,7 +130,7 @@ h1{
     background:#0A2540;
     border-radius:20px;
     padding:25px;
-    box-shadow:0 10px 20px rgba(0,0,0,.3);
+    box-shadow:0 10px 20px rgba(0,0,0,.35);
 }
 
 table{
@@ -137,12 +159,34 @@ footer{
     opacity:.7;
 }
 
+@media(max-width:900px){
+
+.header-content{
+    flex-direction:column;
+    text-align:center;
+}
+
+.header-left{
+    text-align:center;
+}
+
+.trophy{
+    margin-top:20px;
+    height:180px;
+}
+
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
+
+<div class="header-content">
+
+<div class="header-left">
 
 <h1>🏆 FIFA WORLD CUP 2026</h1>
 
@@ -155,11 +199,21 @@ Prediction League
 </div>
 
 <div class="nav">
-    <a href="/">🏆 Leaderboard</a>
-    <a href="/players.html">👤 Players</a>
-    <a href="/fixtures.html">⚽ Fixtures</a>
-    <a href="/stats.html">📊 Stats</a>
-    <a href="/rules.html">🎁 Rules & Prizes</a>
+<a href="/">🏆 Leaderboard</a>
+<a href="/players.html">👤 Players</a>
+<a href="/fixtures.html">⚽ Fixtures</a>
+<a href="/stats.html">📊 Stats</a>
+<a href="/rules.html">🎁 Rules & Prizes</a>
+</div>
+
+</div>
+
+<div>
+<img src="worldcup-trophy.png"
+alt="World Cup Trophy"
+class="trophy">
+</div>
+
 </div>
 
 </header>
@@ -168,7 +222,9 @@ Prediction League
 
 <div class="hero">
 <h2>⚽ The Ultimate World Cup Prediction Challenge</h2>
-<p>Follow live rankings, player stats and tournament predictions.</p>
+<p>
+Follow live rankings, player statistics and tournament predictions.
+</p>
 </div>
 
 <div id="podium" class="podium"></div>
@@ -213,26 +269,21 @@ async function loadLeaderboard(){
 try{
 
 const response = await fetch(csvUrl);
-
-if(!response.ok){
-throw new Error("Failed to load");
-}
-
 const text = await response.text();
 
 const rows =
 text.trim().split("\n").slice(1);
 
-let players = [];
+let players=[];
 
 rows.forEach(row=>{
 
-const cols = row.split(",");
+const cols=row.split(",");
 
 players.push({
-name: cols[0] || "",
-rank: Number(cols[1]) || 0,
-points: Number(cols[2]) || 0
+name:cols[0],
+rank:Number(cols[1])||0,
+points:Number(cols[2])||0
 });
 
 });
@@ -242,7 +293,7 @@ players.sort((a,b)=>b.points-a.points);
 const tbody =
 document.getElementById("leaderboard");
 
-tbody.innerHTML = "";
+tbody.innerHTML="";
 
 players.forEach((player,index)=>{
 
@@ -259,9 +310,9 @@ tbody.innerHTML += `
 const podium =
 document.getElementById("podium");
 
-podium.innerHTML = "";
+podium.innerHTML="";
 
-const medals = [
+const medals=[
 {emoji:"🥇",className:"gold"},
 {emoji:"🥈",className:"silver"},
 {emoji:"🥉",className:"bronze"}
