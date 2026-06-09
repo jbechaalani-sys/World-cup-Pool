@@ -24,6 +24,17 @@ h1{
     margin:0;
 }
 
+.nav{
+    margin-top:15px;
+}
+
+.nav a{
+    color:#FFD700;
+    text-decoration:none;
+    margin:0 15px;
+    font-weight:bold;
+}
+
 .container{
     max-width:1000px;
     margin:auto;
@@ -67,18 +78,18 @@ td{
     padding:20px;
     min-width:180px;
     text-align:center;
-    border:2px solid #FFD700;
 }
 
-.nav{
-    margin-top:15px;
+.gold{
+    border:2px solid gold;
 }
 
-.nav a{
-    color:#FFD700;
-    text-decoration:none;
-    margin:0 15px;
-    font-weight:bold;
+.silver{
+    border:2px solid silver;
+}
+
+.bronze{
+    border:2px solid #cd7f32;
 }
 </style>
 </head>
@@ -86,12 +97,15 @@ td{
 <body>
 
 <header>
+
     <h1>🏆 FIFA WORLD CUP 2026 POOL</h1>
 
     <div class="nav">
-        <a href="/">Leaderboard</a>
-        <a href="/players.html">Players</a>
+        <a href="/">🏆 Leaderboard</a>
+        <a href="/players.html">👤 Players</a>
+        <a href="/fixtures.html">⚽ Fixtures</a>
     </div>
+
 </header>
 
 <div class="container">
@@ -99,9 +113,11 @@ td{
     <div id="podium" class="podium"></div>
 
     <div class="card">
+
         <h2>Leaderboard</h2>
 
         <table>
+
             <thead>
                 <tr>
                     <th>Rank</th>
@@ -115,6 +131,7 @@ td{
                     <td colspan="3">Loading...</td>
                 </tr>
             </tbody>
+
         </table>
 
     </div>
@@ -179,13 +196,17 @@ async function loadLeaderboard() {
 
         podium.innerHTML = "";
 
-        const medals = ["🥇","🥈","🥉"];
+        const medals = [
+            {emoji:"🥇",className:"gold"},
+            {emoji:"🥈",className:"silver"},
+            {emoji:"🥉",className:"bronze"}
+        ];
 
         players.slice(0,3).forEach((player,index)=>{
 
             podium.innerHTML += `
-            <div class="podium-card">
-                <h2>${medals[index]}</h2>
+            <div class="podium-card ${medals[index].className}">
+                <h2>${medals[index].emoji}</h2>
                 <h3>${player.name}</h3>
                 <p>${player.points} pts</p>
             </div>
@@ -199,7 +220,6 @@ async function loadLeaderboard() {
 
         document.getElementById("leaderboard").innerHTML =
         "<tr><td colspan='3'>❌ Failed to load leaderboard</td></tr>";
-
     }
 }
 
