@@ -308,11 +308,11 @@ class="trophy">
     
 <div class="summary-card">
 
-<h2>⏳ Countdown To Kickoff</h2>
+<h2 id="countdownTitle">⏳ Countdown To Kickoff</h2>
 
 <h1 id="timer">Loading...</h1>
 
-<p>Mexico 🇲🇽 vs South Africa 🇿🇦</p>
+<p id="matchInfo">Mexico 🇲🇽 vs South Africa 🇿🇦</p>
 
 </div>
 
@@ -562,23 +562,19 @@ loadWinnerTracker();
 
 document.getElementById("lastUpdated").innerHTML =
 "Last Updated: " + new Date().toLocaleString();
+const fixturesUrl =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=186871962&single=true&output=csv";
 
 const kickoff =
 new Date("2026-06-11T23:00:00+04:00");
 
-function updateCountdown(){
+async function updateTournamentCard(){
 
 const now = new Date();
+
+if(now < kickoff){
+
 const diff = kickoff - now;
-
-if(diff <= 0){
-
-document.getElementById("timer").innerHTML =
-"World Cup Has Started!";
-
-return;
-
-}
 
 const days =
 Math.floor(diff/(1000*60*60*24));
@@ -589,14 +585,63 @@ Math.floor((diff/(1000*60*60))%24);
 const minutes =
 Math.floor((diff/(1000*60))%60);
 
+document.getElementById("countdownTitle").innerHTML =
+"⏳ Countdown To Kickoff";
+
 document.getElementById("timer").innerHTML =
 `${days}d ${hours}h ${minutes}m`;
 
+document.getElementById("matchInfo").innerHTML =
+"Mexico 🇲🇽 vs South Africa 🇿🇦";
+
+return;
 }
 
-updateCountdown();
+try{
 
-setInterval(updateCountdown,60000);
+const response = await fetch(fixturesUrl);
+const text = await response.text();
+
+const rows =
+text.trim().split("\n").slice(1);
+
+for(const row of rows){
+
+const cols = row.split(",");
+
+const date = cols[1]?.trim();
+const time = cols[2]?.trim();
+const home = cols[4]?.trim();
+const away = cols[5]?.trim();
+
+if(!date || !time) continue;
+
+document.getElementById("countdownTitle").innerHTML =
+"⚽ Upcoming Fixture";
+
+document.getElementById("timer").innerHTML =
+`${home} vs ${away}`;
+
+document.getElementById("matchInfo").innerHTML =
+`${date} • ${time} Dubai Time`;
+
+break;
+
+}
+
+}
+catch(error){
+
+console.error(error);
+
+}
+
+}
+
+updateTournamentCard();
+
+setInterval(updateTournamentCard,60000);
+
 </script>
 
 </body>
