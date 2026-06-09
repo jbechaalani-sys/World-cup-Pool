@@ -185,7 +185,27 @@ h1{
     margin-top:10px;
     font-weight:bold;
 }
+#winnerTracker{
+    text-align:left;
+    max-width:600px;
+    margin:auto;
+}
 
+.pick-row{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+.pick-team{
+    font-weight:bold;
+}
+
+.pick-count{
+    color:#FFD700;
+    font-weight:bold;
+}
 }
 
 .card{
@@ -285,7 +305,20 @@ class="trophy">
 </header>
 
 <div class="container">
+    
+<div class="summary-card">
 
+<h2>⏳ Countdown To Kickoff</h2>
+
+<h1 id="timer">Loading...</h1>
+
+<p>Mexico 🇲🇽 vs South Africa 🇿🇦</p>
+
+</div>
+
+<div class="summary-card">
+
+<h2>💰 Prize Fund</h2>
 
 <div class="summary-card">
 
@@ -309,7 +342,15 @@ class="trophy">
 </div>
 
 </div>
+<div class="summary-card">
 
+<h2>🌍 Winner Pick Tracker</h2>
+
+<div id="winnerTracker">
+Loading...
+</div>
+
+</div>
 </div>
 
 <div id="podium" class="podium"></div>
@@ -431,10 +472,109 @@ document.getElementById("leaderboard").innerHTML =
 }
 
 loadLeaderboard();
+const playersUrl =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=816094404&single=true&output=csv";
+
+async function loadWinnerTracker(){
+
+try{
+
+const response = await fetch(playersUrl);
+const text = await response.text();
+
+const rows = text.trim().split("\n").slice(1);
+
+const picks = {};
+
+rows.forEach(row=>{
+
+const cols = row.split(",");
+
+const winnerPick = cols[5]?.trim();
+
+if(!winnerPick) return;
+
+picks[winnerPick] =
+(picks[winnerPick] || 0) + 1;
+
+});
+
+const sorted =
+Object.entries(picks)
+.sort((a,b)=>b[1]-a[1]);
+
+const tracker =
+document.getElementById("winnerTracker");
+
+tracker.innerHTML="";
+
+sorted.forEach(([team,count])=>{
+
+tracker.innerHTML += `
+<div class="pick-row">
+<div class="pick-team">${team}</div>
+<div class="pick-count">${count}</div>
+</div>
+`;
+
+});
+
+}
+catch(error){
+
+console.error(error);
+
+document.getElementById("winnerTracker").innerHTML =
+"Failed to load";
+
+}
+
+}
+
+loadWinnerTracker();
+document.getElementById("lastUpdated").innerHTML =
+"Last Updated: " + new Date().toLocaleString();
+loadLeaderboard();
+
+loadWinnerTracker();
 
 document.getElementById("lastUpdated").innerHTML =
 "Last Updated: " + new Date().toLocaleString();
 
+const kickoff =
+new Date("2026-06-11T23:00:00+04:00");
+
+function updateCountdown(){
+
+const now = new Date();
+const diff = kickoff - now;
+
+if(diff <= 0){
+
+document.getElementById("timer").innerHTML =
+"World Cup Has Started!";
+
+return;
+
+}
+
+const days =
+Math.floor(diff/(1000*60*60*24));
+
+const hours =
+Math.floor((diff/(1000*60*60))%24);
+
+const minutes =
+Math.floor((diff/(1000*60))%60);
+
+document.getElementById("timer").innerHTML =
+`${days}d ${hours}h ${minutes}m`;
+
+}
+
+updateCountdown();
+
+setInterval(updateCountdown,60000);
 </script>
 
 </body>
