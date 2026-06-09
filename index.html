@@ -262,7 +262,25 @@ footer{
 }
 
 }
+.pick-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,.15);
+}
 
+.pick-team{
+    font-weight:bold;
+    font-size:18px;
+}
+
+.pick-count{
+    color:#FFD700;
+    font-weight:bold;
+    font-size:18px;
+    letter-spacing:2px;
+}
 </style>
 </head>
 
@@ -422,9 +440,15 @@ tbody.innerHTML="";
 
 players.forEach((player,index)=>{
 
+let rankDisplay = index + 1;
+
+if(index === 0) rankDisplay = "🥇";
+if(index === 1) rankDisplay = "🥈";
+if(index === 2) rankDisplay = "🥉";
+
 tbody.innerHTML += `
 <tr>
-<td>${index+1}</td>
+<td>${rankDisplay}</td>
 <td>${player.name}</td>
 <td>${player.points}</td>
 </tr>
@@ -529,12 +553,16 @@ const flags = {
     "Senegal":"🇸🇳"
 };
 
+const bar = "▓".repeat(count);
+
 tracker.innerHTML += `
 <div class="pick-row">
 <div class="pick-team">
 ${flags[team] || "🏳️"} ${team}
 </div>
-<div class="pick-count">${count}</div>
+<div class="pick-count">
+${bar} ${count}
+</div>
 </div>
 `;
 
@@ -552,16 +580,13 @@ document.getElementById("winnerTracker").innerHTML =
 }
 
 }
-
-loadWinnerTracker();
-document.getElementById("lastUpdated").innerHTML =
-"Last Updated: " + new Date().toLocaleString();
 loadLeaderboard();
 
 loadWinnerTracker();
 
 document.getElementById("lastUpdated").innerHTML =
 "Last Updated: " + new Date().toLocaleString();
+
 const fixturesUrl =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=186871962&single=true&output=csv";
 
