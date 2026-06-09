@@ -126,6 +126,31 @@ h1{
     border:3px solid #cd7f32;
 }
 
+.summary-card{
+    background:#0A2540;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:30px;
+    text-align:center;
+    box-shadow:0 10px 20px rgba(0,0,0,.3);
+}
+
+.summary-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.summary-grid h3{
+    color:#FFD700;
+    font-size:36px;
+    margin:0;
+}
+
+.summary-grid p{
+    margin:5px 0 0;
+}
+
 .card{
     background:#0A2540;
     border-radius:20px;
@@ -173,6 +198,10 @@ footer{
 .trophy{
     margin-top:20px;
     height:180px;
+}
+
+.summary-grid{
+    grid-template-columns:repeat(2,1fr);
 }
 
 }
@@ -229,6 +258,36 @@ Follow live rankings, player statistics and tournament predictions.
 
 <div id="podium" class="podium"></div>
 
+<div class="summary-card">
+
+<h2>🏆 Pool Summary</h2>
+
+<div class="summary-grid">
+
+<div>
+<h3>17</h3>
+<p>Players</p>
+</div>
+
+<div>
+<h3>104</h3>
+<p>Matches</p>
+</div>
+
+<div>
+<h3>3</h3>
+<p>Pts Exact Score</p>
+</div>
+
+<div>
+<h3>1</h3>
+<p>Pt Correct Winner</p>
+</div>
+
+</div>
+
+</div>
+
 <div class="card">
 
 <h2>🏆 Leaderboard</h2>
@@ -256,7 +315,11 @@ Follow live rankings, player statistics and tournament predictions.
 </div>
 
 <footer>
-FIFA World Cup 2026 Prediction League
+
+<p>FIFA World Cup 2026 Prediction League</p>
+
+<p id="lastUpdated"></p>
+
 </footer>
 
 <script>
@@ -271,8 +334,7 @@ try{
 const response = await fetch(csvUrl);
 const text = await response.text();
 
-const rows =
-text.trim().split("\n").slice(1);
+const rows = text.trim().split("\n").slice(1);
 
 let players=[];
 
@@ -343,6 +405,9 @@ document.getElementById("leaderboard").innerHTML =
 }
 
 loadLeaderboard();
+
+document.getElementById("lastUpdated").innerHTML =
+"Last Updated: " + new Date().toLocaleString();
 
 </script>
 
