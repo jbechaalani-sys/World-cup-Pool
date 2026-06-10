@@ -457,32 +457,38 @@ let rankDisplay = index + 1;
 
 if(index === 0){
 
-rankDisplay = "🥇";
+    rankDisplay = "🥇";
 
 }
 else if(index === 1){
 
-if(player.points === players[0].points){
-rankDisplay = "🥇";
-}
-else{
-rankDisplay = "🥈";
-}
+    rankDisplay =
+    (player.points === players[0].points)
+    ? "🥇"
+    : "🥈";
 
+}
 else if(index === 2){
 
-if(player.points === players[0].points){
-rankDisplay = "🥇";
-}
-else if(player.points === players[1].points){
-rankDisplay = "🥈";
-}
-else{
-rankDisplay = "🥉";
+    if(player.points === players[0].points){
+
+        rankDisplay = "🥇";
+
+    }
+    else if(player.points === players[1].points){
+
+        rankDisplay = "🥈";
+
+    }
+    else{
+
+        rankDisplay = "🥉";
+
+    }
+
 }
 
 tbody.innerHTML += `
-
 <tr>
 <td>${rankDisplay}</td>
 <td>${player.name}</td>
