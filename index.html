@@ -503,17 +503,57 @@ document.getElementById("podium");
 
 podium.innerHTML="";
 
-const medals=[
-{emoji:"🥇",className:"gold"},
-{emoji:"🥈",className:"silver"},
-{emoji:"🥉",className:"bronze"}
-];
+const top3 = players.slice(0,3);
 
-players.slice(0,3).forEach((player,index)=>{
+top3.forEach((player,index)=>{
+
+let emoji = "🥉";
+let className = "bronze";
+
+if(index === 0){
+
+    emoji = "🥇";
+    className = "gold";
+
+}
+else if(index === 1){
+
+    if(player.points === top3[0].points){
+
+        emoji = "🥇";
+        className = "gold";
+
+    }else{
+
+        emoji = "🥈";
+        className = "silver";
+
+    }
+
+else if(index === 2){
+
+    if(player.points === top3[0].points){
+
+        emoji = "🥇";
+        className = "gold";
+
+    }
+    else if(player.points === top3[1].points){
+
+        emoji = "🥈";
+        className = "silver";
+
+    }
+    else{
+
+        emoji = "🥉";
+        className = "bronze";
+
+    }
 
 podium.innerHTML += `
-<div class="podium-card ${medals[index].className}">
-<h1>${medals[index].emoji}</h1>
+<div class="podium-card ${className}">
+<h1>${emoji}</h1>
 <h2>${player.name}</h2>
 <h3>${player.points} PTS</h3>
 </div>
