@@ -60,18 +60,18 @@ h1{
 }
 
 .player-card{
-background:linear-gradient(135deg,#0A2540,#14355a);
-border:3px solid #FFD700;
-border-radius:20px;
-padding:25px;
-margin-bottom:20px;
-box-shadow:0 0 25px rgba(255,215,0,.35);
-transition:all .3s ease;
+    background:#0A2540;
+    border:1px solid rgba(255,215,0,.25);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+    transition:all .3s ease;
 }
 
 .player-card:hover{
-transform:translateY(-5px);
-box-shadow:0 0 35px rgba(255,215,0,.55);
+    transform:translateY(-3px);
+    border-color:#FFD700;
 }
 
 .player-name{
@@ -98,22 +98,25 @@ border-radius:10px;
 
 }
 .prediction-btn{
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
     margin-top:20px;
-    background:#FFD700;
-    color:#041E42;
+    background:#14355a;
+    color:white;
     text-decoration:none;
     padding:12px 18px;
-    border-radius:10px;
-    font-weight:bold;
-    transition:all .3s ease;
-    box-shadow:0 5px 15px rgba(255,215,0,.3);
+    border-radius:12px;
+    border:1px solid rgba(255,215,0,.3);
+    font-weight:600;
+    transition:.3s;
 }
 
 .prediction-btn:hover{
-    transform:translateY(-3px);
-    box-shadow:0 8px 20px rgba(255,215,0,.5);
-
+    background:#1d4b7d;
+    border-color:#FFD700;
+    transform:translateY(-2px);
+}
 }
 
 .prediction-btn:hover{
@@ -233,7 +236,7 @@ container.innerHTML += `
 class="prediction-btn"
 href="${predictionLink}"
 target="_blank">
-📄 View Prediction Sheet
+📊 View Prediction
 </a>
 
 </div>
