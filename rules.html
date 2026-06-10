@@ -86,6 +86,14 @@ td{
     color:#FFD700;
     font-weight:bold;
 }
+    ul{
+    padding-left:20px;
+    line-height:1.8;
+}
+
+li{
+    margin-bottom:8px;
+}
 </style>
 </head>
 
@@ -105,81 +113,87 @@ td{
 
 </header>
 
+    
 <div class="container">
+
+<div class="card" style="background:linear-gradient(135deg,#5a4500,#7a6200);border:2px solid #FFD700;text-align:center;">
+
+<h2>🏆 FIFA World Cup 2026 Prediction League</h2>
+
+<p>🌍 17 Competitors</p>
+<p>⚽ 104 Matches</p>
+<p>💰 1700 AED Prize Pool</p>
+<p>🥇 Winner Takes Home 1000 AED</p>
+
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;">
+
+<div class="card" style="border:3px solid gold;">
+
+<h2 style="color:#FFD700;">💰 Prize Pool</h2>
+
+<p><strong>🥇 Tournament Champion</strong></p>
+<h2 style="color:#FFD700;">1000 AED</h2>
+
+<p><strong>🥈 Runner-Up</strong></p>
+<h3>500 AED</h3>
+
+<p><strong>🏅 Group Stage Winner</strong></p>
+<h3>200 AED</h3>
+
+</div>
 
 <div class="card">
 
-<h2>Competition Rules</h2>
+<h2 style="color:#FFD700;">🏆 Group Stage Scoring</h2>
 
-<table>
+<ul>
+<li>🎯 Exact Score = 3 Points</li>
+<li>✅ Correct Winner = 1 Point</li>
+<li>❌ Incorrect Prediction = 0 Points</li>
+</ul>
 
-<thead>
-<tr>
-<th>Rule</th>
-<th>Value</th>
-</tr>
-</thead>
+</div>
 
-<tbody id="rulesTable">
-<tr>
-<td colspan="2">Loading...</td>
-</tr>
-</tbody>
+<div class="card">
 
-</table>
+<h2 style="color:#FFD700;">⚽ Knockout Stage Scoring</h2>
+
+<ul>
+<li>Round of 32 = 2 Points</li>
+<li>Round of 16 = 5 Points</li>
+<li>Quarter Finals = 10 Points</li>
+<li>Semi Finals = 20 Points</li>
+<li>Final = 40 Points</li>
+<li>World Cup Winner = 100 Points</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h2 style="color:#FFD700;">📋 Tournament Rules</h2>
+
+<ul>
+<li>Predictions lock at kickoff.</li>
+<li>Rankings update automatically.</li>
+<li>Total points determine final standings.</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h2 style="color:#FFD700;">🏅 Tie-Breakers</h2>
+
+<ul>
+<li>Most Exact Scores</li>
+<li>Most Correct Winners</li>
+</ul>
 
 </div>
 
 </div>
 
-<script>
-
-const csvUrl =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGUvaOJD7YamWr78XRNEv47WxBqnOWWM3SoJxZ11iqqY-0tXseAzlsgtheed1OaVQYr-YOxjm3cI74/pub?gid=1727207293&single=true&output=csv";
-
-async function loadRules(){
-
-    try{
-
-        const response = await fetch(csvUrl);
-        const text = await response.text();
-
-        const rows = text.trim().split("\n").slice(1);
-
-        const tbody =
-        document.getElementById("rulesTable");
-
-        tbody.innerHTML = "";
-
-        rows.forEach(row=>{
-
-            const cols = row.split(",");
-
-            const rule = cols[0] || "";
-            const value = cols[1] || "";
-
-            tbody.innerHTML += `
-            <tr>
-                <td class="rule-title">${rule}</td>
-                <td>${value}</td>
-            </tr>
-            `;
-        });
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        document.getElementById("rulesTable").innerHTML =
-        "<tr><td colspan='2'>❌ Failed to load rules</td></tr>";
-    }
-}
-
-loadRules();
-
-</script>
-
-</body>
-</html>
-```
+</div>
