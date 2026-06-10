@@ -501,7 +501,7 @@ tbody.innerHTML += `
 const podium =
 document.getElementById("podium");
 
-podium.innerHTML="";
+podium.innerHTML = "";
 
 const top3 = players.slice(0,3);
 
@@ -512,46 +512,57 @@ let className = "bronze";
 
 if(index === 0){
 
-    emoji = "🥇";
-    className = "gold";
+```
+emoji = "🥇";
+className = "gold";
+```
 
 }
 else if(index === 1){
 
-    if(player.points === top3[0].points){
+```
+if(player.points === top3[0].points){
 
-        emoji = "🥇";
-        className = "gold";
+    emoji = "🥇";
+    className = "gold";
 
-    }else{
+}
+else{
 
-        emoji = "🥈";
-        className = "silver";
+    emoji = "🥈";
+    className = "silver";
 
-    }
+}
+```
 
+}
 else if(index === 2){
 
-    if(player.points === top3[0].points){
+```
+if(player.points === top3[0].points){
 
-        emoji = "🥇";
-        className = "gold";
+    emoji = "🥇";
+    className = "gold";
 
-    }
-    else if(player.points === top3[1].points){
+}
+else if(player.points === top3[1].points){
 
-        emoji = "🥈";
-        className = "silver";
+    emoji = "🥈";
+    className = "silver";
 
-    }
-    else{
+}
+else{
 
-        emoji = "🥉";
-        className = "bronze";
+    emoji = "🥉";
+    className = "bronze";
 
-    }
+}
+```
+
+}
 
 podium.innerHTML += `
+
 <div class="podium-card ${className}">
 <h1>${emoji}</h1>
 <h2>${player.name}</h2>
@@ -560,6 +571,7 @@ podium.innerHTML += `
 `;
 
 });
+
 
 }
 catch(error){
