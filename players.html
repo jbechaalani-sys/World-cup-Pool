@@ -102,23 +102,23 @@ border-radius:10px;
     width:100%;
     text-align:center;
     margin-top:20px;
-    background:#FFD700;
+    background:linear-gradient(135deg,#FFD700,#F4C430);
     color:#041E42;
     text-decoration:none;
     padding:20px;
     border-radius:15px;
     font-size:20px;
-    font-weight:700;
-    border:2px solid #FFD700;
+    font-weight:800;
+    border:3px solid #FFD700;
     transition:all .3s ease;
-    box-shadow:0 6px 18px rgba(255,215,0,.35);
+    box-shadow:0 0 20px rgba(255,215,0,.4);
 }
 
 .prediction-btn:hover{
-    background:white;
+    transform:translateY(-4px);
+    background:#FFF4B0;
     color:#041E42;
-    transform:translateY(-3px);
-    box-shadow:0 10px 25px rgba(255,215,0,.5);
+    box-shadow:0 0 30px rgba(255,215,0,.7);
 }
 
 .prediction-btn:hover{
@@ -234,11 +234,20 @@ container.innerHTML += `
 
 </div>
 
+<div style="
+margin-top:15px;
+color:#FFD700;
+font-size:14px;
+font-weight:bold;
+text-align:center;">
+🏆 Click to view The complete World Cup prediction 🏆
+</div>
+
 <a
 class="prediction-btn"
 href="${predictionLink}"
 target="_blank">
-⚽ VIEW FULL PREDICTION ⚽
+⚽ VIEW FULL PREDICTIONS ⚽
 </a>
 
 </div>
