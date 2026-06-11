@@ -733,7 +733,15 @@ const time = cols[2]?.trim();
 const home = cols[4]?.trim();
 const away = cols[5]?.trim();
 
+const homeScore = cols[6]?.trim();
+const awayScore = cols[7]?.trim();
+
 if(!date || !time) continue;
+
+// Skip completed matches
+if(homeScore !== "" && awayScore !== ""){
+    continue;
+}
 
 document.getElementById("countdownTitle").innerHTML =
 "⚽ Upcoming Fixture";
@@ -745,7 +753,7 @@ document.getElementById("matchInfo").innerHTML =
 `${date} • ${time} Dubai Time`;
 
 break;
-
+}
 }
 
 }
