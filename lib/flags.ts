@@ -1,0 +1,137 @@
+/**
+ * Team name -> flagcdn country code (ISO 3166-1 alpha-2, lowercase, plus the
+ * gb-eng/gb-sct/gb-wls/gb-nir sub-codes). We render real SVG flags rather than
+ * emoji flags, which break for England/Scotland/Wales on Android & Windows.
+ * Keys are normalized (lowercased, single-spaced). Unknown teams fall back to
+ * a neutral marker in the <Flag> component.
+ */
+const FLAGS: Record<string, string> = {
+  // CONCACAF
+  mexico: "mx",
+  usa: "us",
+  "united states": "us",
+  canada: "ca",
+  "costa rica": "cr",
+  panama: "pa",
+  honduras: "hn",
+  jamaica: "jm",
+  haiti: "ht",
+  guatemala: "gt",
+  "el salvador": "sv",
+  "trinidad and tobago": "tt",
+  curacao: "cw",
+  "curaçao": "cw",
+  suriname: "sr",
+  // CONMEBOL
+  brazil: "br",
+  argentina: "ar",
+  uruguay: "uy",
+  colombia: "co",
+  ecuador: "ec",
+  paraguay: "py",
+  peru: "pe",
+  chile: "cl",
+  venezuela: "ve",
+  bolivia: "bo",
+  // UEFA
+  spain: "es",
+  france: "fr",
+  england: "gb-eng",
+  scotland: "gb-sct",
+  wales: "gb-wls",
+  "northern ireland": "gb-nir",
+  "republic of ireland": "ie",
+  ireland: "ie",
+  germany: "de",
+  portugal: "pt",
+  netherlands: "nl",
+  belgium: "be",
+  italy: "it",
+  croatia: "hr",
+  switzerland: "ch",
+  serbia: "rs",
+  poland: "pl",
+  denmark: "dk",
+  austria: "at",
+  ukraine: "ua",
+  "czech republic": "cz",
+  czechia: "cz",
+  turkey: "tr",
+  türkiye: "tr",
+  turkiye: "tr",
+  norway: "no",
+  sweden: "se",
+  greece: "gr",
+  romania: "ro",
+  hungary: "hu",
+  slovenia: "si",
+  slovakia: "sk",
+  finland: "fi",
+  iceland: "is",
+  albania: "al",
+  georgia: "ge",
+  "north macedonia": "mk",
+  "bosnia & herzegovina": "ba",
+  "bosnia and herzegovina": "ba",
+  russia: "ru",
+  // AFC
+  "south korea": "kr",
+  "korea republic": "kr",
+  japan: "jp",
+  iran: "ir",
+  "ir iran": "ir",
+  "saudi arabia": "sa",
+  qatar: "qa",
+  australia: "au",
+  uzbekistan: "uz",
+  jordan: "jo",
+  iraq: "iq",
+  "united arab emirates": "ae",
+  uae: "ae",
+  oman: "om",
+  bahrain: "bh",
+  kuwait: "kw",
+  china: "cn",
+  thailand: "th",
+  vietnam: "vn",
+  india: "in",
+  indonesia: "id",
+  // CAF
+  morocco: "ma",
+  senegal: "sn",
+  tunisia: "tn",
+  algeria: "dz",
+  egypt: "eg",
+  nigeria: "ng",
+  ghana: "gh",
+  cameroon: "cm",
+  "ivory coast": "ci",
+  "cote d'ivoire": "ci",
+  "côte d'ivoire": "ci",
+  "south africa": "za",
+  mali: "ml",
+  "burkina faso": "bf",
+  "cape verde": "cv",
+  "cabo verde": "cv",
+  "dr congo": "cd",
+  "congo dr": "cd",
+  angola: "ao",
+  zambia: "zm",
+  guinea: "gn",
+  gabon: "ga",
+  // OFC
+  "new zealand": "nz",
+  "new caledonia": "nc",
+  tahiti: "pf",
+};
+
+export function flagCodeFor(team: string): string | null {
+  if (!team) return null;
+  const key = team.trim().toLowerCase().replace(/\s+/g, " ");
+  return FLAGS[key] ?? null;
+}
+
+/** Short 2–3 letter fallback shown when no flag code is known. */
+export function teamShort(team: string): string {
+  return team.trim().slice(0, 3).toUpperCase();
+}

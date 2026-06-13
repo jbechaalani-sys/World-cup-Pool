@@ -1,0 +1,158 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * WC26 Pool — premium dark sports theme.
+ * Near-black blue-charcoal base; refined gold primary; pitch-teal as the
+ * brand "interactive/live" accent (kept SEPARATE from shadcn's --accent,
+ * which stays a subtle hover surface). Movement colors never used alone —
+ * arrows carry a glyph + sign too.
+ */
+:root {
+  --radius: 0.875rem;
+
+  --background: #0a0e1a;
+  --foreground: #f4f6fb;
+
+  --card: #121829;
+  --card-foreground: #f4f6fb;
+
+  --popover: #161d30;
+  --popover-foreground: #f4f6fb;
+
+  --primary: #f5c518; /* refined gold */
+  --primary-foreground: #0a0e1a;
+
+  --secondary: #1b2740;
+  --secondary-foreground: #c9d4e8;
+
+  --muted: #1a2236;
+  --muted-foreground: #8a97b1;
+
+  --accent: #1e2a45; /* subtle hover surface, NOT brand teal */
+  --accent-foreground: #f4f6fb;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #f4f6fb;
+
+  --border: #232c44;
+  --input: #2a3553;
+  --ring: #f5c518;
+
+  /* brand + semantic */
+  --teal: #2dd4bf;
+  --pitch: #16a34a;
+  --up: #34d399;
+  --down: #f87171;
+  --same: #8a97b1;
+  --gold: #f5c518;
+  --silver: #c7d0dd;
+  --bronze: #d08b49;
+
+  --chart-1: #f5c518;
+  --chart-2: #2dd4bf;
+  --chart-3: #60a5fa;
+  --chart-4: #f87171;
+  --chart-5: #c084fc;
+
+  --sidebar: #121829;
+  --sidebar-foreground: #f4f6fb;
+  --sidebar-primary: #f5c518;
+  --sidebar-primary-foreground: #0a0e1a;
+  --sidebar-accent: #1e2a45;
+  --sidebar-accent-foreground: #f4f6fb;
+  --sidebar-border: #232c44;
+  --sidebar-ring: #f5c518;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-teal: var(--teal);
+  --color-pitch: var(--pitch);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --color-same: var(--same);
+  --color-gold: var(--gold);
+  --color-silver: var(--silver);
+  --color-bronze: var(--bronze);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), var(--font-inter), sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "tnum" off;
+    /* faint "stadium light" glow behind the page top */
+    background-image: radial-gradient(
+      120% 60% at 50% -10%,
+      color-mix(in oklab, var(--primary) 7%, transparent) 0%,
+      transparent 55%
+    );
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  /* tabular numerals everywhere numbers matter */
+  .nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
