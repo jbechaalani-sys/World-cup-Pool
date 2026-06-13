@@ -1,10 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { Flag } from "@/components/common/flag";
+import { MatchPredictions } from "@/components/fixtures/match-predictions";
 import { TZ_LABEL } from "@/lib/config";
+import {
+  predictionsForFixture,
+  type PredictionsByPair,
+} from "@/lib/predictions-core";
 import type { Fixture } from "@/lib/schemas";
 import { isFinished } from "@/lib/stages";
+import { cn } from "@/lib/utils";
 
 const MONTHS: Record<string, number> = {
   jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
@@ -42,9 +49,16 @@ function format(ms: number): string {
   return `${hours}h ${mins}m ${secs}s`;
 }
 
-export function KickoffCard({ fixtures }: { fixtures: Fixture[] }) {
+export function KickoffCard({
+  fixtures,
+  predictionsByPair,
+}: {
+  fixtures: Fixture[];
+  predictionsByPair: PredictionsByPair;
+}) {
   const next = fixtures.find((f) => !isFinished(f));
   const [now, setNow] = useState<number | null>(null);
+  const [showPredictions, setShowPredictions] = useState(false);
 
   useEffect(() => {
     setNow(Date.now());
@@ -63,6 +77,10 @@ export function KickoffCard({ fixtures }: { fixtures: Fixture[] }) {
 
   const target = parseFixtureDate(next.date, next.time);
   const countdown = now !== null && target ? format(target.getTime() - now) : null;
+  const preds = predictionsForFixture(predictionsByPair, next.home, next.away);
+  const finished = isFinished(next);
+  const resultH = finished ? next.homeScore : null;
+  const resultA = finished ? next.awayScore : null;
 
   return (
     <div className="rounded-2xl border border-border bg-gradient-to-b from-secondary/40 to-card p-5 text-center">
@@ -82,6 +100,35 @@ export function KickoffCard({ fixtures }: { fixtures: Fixture[] }) {
       <div className="mt-1 text-xs text-muted-foreground">
         {next.group} · {next.time} {TZ_LABEL}
       </div>
+
+      {preds.length > 0 && (
+        <>
+          <button
+            type="button"
+            onClick={() => setShowPredictions((o) => !o)}
+            aria-expanded={showPredictions}
+            className="mx-auto mt-3 flex items-center justify-center gap-1 border-t border-border/60 pt-3 text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {showPredictions ? "Hide" : "Show"} everyone&apos;s predictions ({preds.length})
+            <ChevronDown
+              className={cn(
+                "size-3 transition-transform",
+                showPredictions && "rotate-180",
+              )}
+              aria-hidden
+            />
+          </button>
+          {showPredictions && (
+            <div className="text-left">
+              <MatchPredictions
+                predictions={preds}
+                resultH={resultH}
+                resultA={resultA}
+              />
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

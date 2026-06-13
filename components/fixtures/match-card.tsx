@@ -1,7 +1,13 @@
+"use client";
+
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { Flag } from "@/components/common/flag";
 import type { Fixture } from "@/lib/schemas";
+import type { MatchPrediction } from "@/lib/predictions-core";
 import { isFinished } from "@/lib/stages";
 import { cn } from "@/lib/utils";
+import { MatchPredictions } from "./match-predictions";
 
 export interface LiveOverlay {
   homeGoals: number | null;
@@ -37,20 +43,31 @@ export function MatchCard({
   fixture,
   today = false,
   live,
+  predictions,
 }: {
   fixture: Fixture;
   today?: boolean;
   live?: LiveOverlay;
+  predictions?: MatchPrediction[];
 }) {
+  const [open, setOpen] = useState(false);
   const finished = isFinished(fixture);
   const liveNow = Boolean(live) && !finished;
 
   let score: string | null = null;
+  let resultH: number | null = null;
+  let resultA: number | null = null;
   if (liveNow && live) {
+    resultH = live.homeGoals;
+    resultA = live.awayGoals;
     score = `${live.homeGoals ?? 0}–${live.awayGoals ?? 0}`;
   } else if (finished) {
+    resultH = fixture.homeScore;
+    resultA = fixture.awayScore;
     score = `${fixture.homeScore ?? 0}–${fixture.awayScore ?? 0}`;
   }
+
+  const hasPredictions = Boolean(predictions && predictions.length > 0);
 
   return (
     <div
@@ -103,6 +120,30 @@ export function MatchCard({
         {fixture.date}
         {fixture.time ? ` · ${fixture.time}` : ""}
       </div>
+
+      {hasPredictions && (
+        <>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            className="mt-2 flex w-full items-center justify-center gap-1 border-t border-border/60 pt-2 text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {open ? "Hide" : "Show"} predictions ({predictions!.length})
+            <ChevronDown
+              className={cn("size-3 transition-transform", open && "rotate-180")}
+              aria-hidden
+            />
+          </button>
+          {open && (
+            <MatchPredictions
+              predictions={predictions!}
+              resultH={resultH}
+              resultA={resultA}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

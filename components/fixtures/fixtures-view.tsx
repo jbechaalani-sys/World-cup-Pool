@@ -6,6 +6,10 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { MatchCard, type LiveOverlay } from "./match-card";
 import type { Fixture } from "@/lib/schemas";
 import type { LiveMatch } from "@/lib/live-scores";
+import {
+  predictionsForFixture,
+  type PredictionsByPair,
+} from "@/lib/predictions-core";
 import type { StageGroup } from "@/lib/stages";
 import { matchKey } from "@/lib/team-name";
 
@@ -27,7 +31,13 @@ function keyFor(f: Fixture): string {
   return `${f.matchNo}-${f.home}-${f.away}`;
 }
 
-export function FixturesView({ groups }: { groups: StageGroup[] }) {
+export function FixturesView({
+  groups,
+  predictionsByPair,
+}: {
+  groups: StageGroup[];
+  predictionsByPair: PredictionsByPair;
+}) {
   const [todayKey, setTodayKey] = useState<string | null>(null);
   const [live, setLive] = useState<Record<string, LiveOverlay>>({});
 
@@ -84,6 +94,8 @@ export function FixturesView({ groups }: { groups: StageGroup[] }) {
 
   const isToday = (f: Fixture) => todayKey !== null && dateKey(f.date) === todayKey;
   const liveFor = (f: Fixture) => live[matchKey(f.home, f.away)];
+  const predsFor = (f: Fixture) =>
+    predictionsForFixture(predictionsByPair, f.home, f.away);
 
   const tabs = useMemo(
     () => [
@@ -119,6 +131,7 @@ export function FixturesView({ groups }: { groups: StageGroup[] }) {
                   fixture={f}
                   today={isToday(f)}
                   live={liveFor(f)}
+                  predictions={predsFor(f)}
                 />
               ))}
             </div>
@@ -134,6 +147,7 @@ export function FixturesView({ groups }: { groups: StageGroup[] }) {
               fixture={f}
               today={isToday(f)}
               live={liveFor(f)}
+              predictions={predsFor(f)}
             />
           ))}
         </TabsContent>

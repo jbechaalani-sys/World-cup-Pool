@@ -5,6 +5,7 @@ import { PageTitle } from "@/components/common/page-title";
 import { DataError, EmptyState } from "@/components/common/states";
 import { FixturesView } from "@/components/fixtures/fixtures-view";
 import { TZ_LABEL } from "@/lib/config";
+import { getPredictionsByPair } from "@/lib/predictions";
 import { getFixtures } from "@/lib/sheets";
 import { groupByStage } from "@/lib/stages";
 
@@ -14,9 +15,13 @@ export const revalidate = 60;
 export default async function FixturesPage() {
   let view: ReactNode;
   try {
-    const groups = groupByStage(await getFixtures("isr"));
+    const [fixtures, predictionsByPair] = await Promise.all([
+      getFixtures("isr"),
+      getPredictionsByPair().catch(() => ({})),
+    ]);
+    const groups = groupByStage(fixtures);
     view = groups.length ? (
-      <FixturesView groups={groups} />
+      <FixturesView groups={groups} predictionsByPair={predictionsByPair} />
     ) : (
       <EmptyState
         title="No fixtures yet"
