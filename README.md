@@ -39,6 +39,15 @@ npm run dev      # http://localhost:3000
 npm run build    # production build (must be clean)
 ```
 
+## Live scores (optional)
+
+The Fixtures page can overlay **in-progress live scores** from
+[API-Football](https://www.api-football.com/) — purely for display; it never touches the
+sheet or player scoring. Set `API_FOOTBALL_KEY` (see [`.env.example`](.env.example)) to enable
+it; without a key the app behaves exactly as before. The upstream call is cached 5 minutes
+globally and only polled while a tab is visible, to stay under the free 100 req/day quota.
+A future "auto-write finals into the sheet" step (Google Apps Script) can replace manual entry.
+
 ## Notes for the organizer
 
 - **Update scores/predictions in the Google Sheet** — the site updates within ~60 seconds.

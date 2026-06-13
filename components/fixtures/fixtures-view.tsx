@@ -3,9 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { MatchCard } from "./match-card";
+import { MatchCard, type LiveOverlay } from "./match-card";
 import type { Fixture } from "@/lib/schemas";
+import type { LiveMatch } from "@/lib/live-scores";
 import type { StageGroup } from "@/lib/stages";
+import { matchKey } from "@/lib/team-name";
 
 const MONTHS: Record<string, number> = {
   jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
@@ -27,13 +29,61 @@ function keyFor(f: Fixture): string {
 
 export function FixturesView({ groups }: { groups: StageGroup[] }) {
   const [todayKey, setTodayKey] = useState<string | null>(null);
+  const [live, setLive] = useState<Record<string, LiveOverlay>>({});
 
   useEffect(() => {
     const n = new Date();
     setTodayKey(`${n.getMonth() + 1}-${n.getDate()}`);
   }, []);
 
+  // Live-score overlay (API-Football). No-ops unless a key is configured.
+  useEffect(() => {
+    let active = true;
+    let timer: ReturnType<typeof setInterval> | undefined;
+    const pull = async () => {
+      try {
+        const res = await fetch("/api/live", { cache: "no-store" });
+        if (!res.ok || !active) return;
+        const data = (await res.json()) as {
+          enabled: boolean;
+          matches: LiveMatch[];
+        };
+        if (!data.enabled) {
+          if (timer) clearInterval(timer);
+          return;
+        }
+        const map: Record<string, LiveOverlay> = {};
+        for (const m of data.matches) {
+          if (m.inProgress) {
+            map[matchKey(m.home, m.away)] = {
+              homeGoals: m.homeGoals,
+              awayGoals: m.awayGoals,
+              elapsed: m.elapsed,
+            };
+          }
+        }
+        setLive(map);
+      } catch {
+        /* keep last overlay */
+      }
+    };
+    void pull();
+    timer = setInterval(() => {
+      if (!document.hidden) void pull();
+    }, 120_000);
+    const onVisible = () => {
+      if (!document.hidden) void pull();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      active = false;
+      if (timer) clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, []);
+
   const isToday = (f: Fixture) => todayKey !== null && dateKey(f.date) === todayKey;
+  const liveFor = (f: Fixture) => live[matchKey(f.home, f.away)];
 
   const tabs = useMemo(
     () => [
@@ -64,7 +114,12 @@ export function FixturesView({ groups }: { groups: StageGroup[] }) {
             </h2>
             <div className="space-y-2">
               {g.fixtures.map((f) => (
-                <MatchCard key={keyFor(f)} fixture={f} today={isToday(f)} />
+                <MatchCard
+                  key={keyFor(f)}
+                  fixture={f}
+                  today={isToday(f)}
+                  live={liveFor(f)}
+                />
               ))}
             </div>
           </section>
@@ -74,7 +129,12 @@ export function FixturesView({ groups }: { groups: StageGroup[] }) {
       {groups.map((g) => (
         <TabsContent key={g.stage.key} value={g.stage.key} className="space-y-2">
           {g.fixtures.map((f) => (
-            <MatchCard key={keyFor(f)} fixture={f} today={isToday(f)} />
+            <MatchCard
+              key={keyFor(f)}
+              fixture={f}
+              today={isToday(f)}
+              live={liveFor(f)}
+            />
           ))}
         </TabsContent>
       ))}
